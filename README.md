@@ -11,8 +11,8 @@ cd terraform
 terraform init
 terraform apply
 cd ..
-gsutil cp gs://test-dataflow-eu/london_bikes/london_cycle_stations.csv gs://datalake_simple-python-dataflow/london_cycle_stations.csv
-gsutil cp gs://test-dataflow-eu/london_bikes/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv gs://datalake_simple-python-dataflow/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv
+gsutil cp gs://test-dataflow-eu/london_bikes/london_cycle_stations.csv gs://PROJECT_ID/london_cycle_stations.csv
+gsutil cp gs://test-dataflow-eu/london_bikes/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv gs://PROJECT_ID/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv
 ```
 
 ```bash
