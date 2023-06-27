@@ -1,0 +1,5 @@
+apache_beam
+apache_beam[gcp]
+numpy
+pyspark
+google-cloud-dataproc
