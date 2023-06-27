@@ -11,8 +11,8 @@ cd terraform
 terraform init
 terraform apply
 cd ..
-gsutil -m cp -r gs://test-dataflow-eu/london_bikes gs://BUCKET_NAME
-bash jobs/run_spark.sh
+gsutil cp gs://test-dataflow-eu/london_bikes/london_cycle_stations.csv gs://datalake_simple-python-dataflow/london_cycle_stations.csv
+gsutil cp gs://test-dataflow-eu/london_bikes/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv gs://datalake_simple-python-dataflow/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv
 ```
 
 ```bash
