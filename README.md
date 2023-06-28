@@ -28,6 +28,7 @@ The data come from the [**Transport for London API**](https://tfl.gov.uk/info-fo
 Clone the project:
 ```sh
 git clone https://github.com/philippedebeaumont/spark_etl_on_gcp.git
+cd spark_etl_on_gcp
 ```
 
 Launch the cloud infrastructure with terraform. You'll have to provide the path to the google cloud credentials for your project and the google cloud project id.
@@ -35,20 +36,22 @@ Launch the cloud infrastructure with terraform. You'll have to provide the path 
 cd terraform
 terraform init
 terraform apply
-cd ..
 ```
 
-You have to first upload data for the london cycle stations to get the geographic data.
+You have to first upload data for the london cycle stations to get the geographic data. Don't forget to change YOU_PROJECT_ID with your own project id.
 ```sh
-gsutil cp gs://london-bikes/london_cycle_stations.csv gs://datalake_YOUR_PROJECT_ID/london_cycle_stations.csv
+gsutil cp gs://london-bikes/london_cycle_stations.csv gs://datalake-YOUR_PROJECT_ID/london_cycle_stations.csv
 ```
 
 Then you can upload a file in the hires/ folder to trigger the pipeline.
 ```sh
-gsutil cp gs://london-bikes/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv gs://datalake_YOUR_PROJECT_ID/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv
+gsutil cp gs://london-bikes/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv gs://datalake-YOUR_PROJECT_ID/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv
 ```
 
-In gs://london-bikes/hires/ you'll find different files with hires data to test the project.
+In gs://london-bikes/hires/ you'll find different files with hires data to test the project. To use all the files:
+```sh
+gsutil -m cp -r gs://london-bikes/hires/ gs://datalake-YOUR_PROJECT_ID/hires/
+```
 
 Wait a bit for the pipeline to proc and you'll see data added to your tables for the hires and the daily aggregation for the files provided.
 
@@ -58,9 +61,7 @@ Here is an example of a vizualisation for the daily aggregation:
 
 You can then destroy your cloud architecture with terraform by providing the same information when you created it.
 ```sh
-cd terraform
 terraform destroy
-cd ..
 ```
 
 You can also suppress your google cloud project.
