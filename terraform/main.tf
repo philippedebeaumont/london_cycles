@@ -12,7 +12,7 @@ provider "google" {
   project = var.project
   region  = var.region
   zone    = var.zone
-  credentials = file(var.credentials)  # Use this if you do not want to set env-var GOOGLE_APPLICATION_CREDENTIALS
+  credentials = file(var.credentials)
 }
 
 resource "google_storage_bucket" "bucket" {
@@ -130,7 +130,6 @@ resource "google_storage_notification" "notification" {
 
   depends_on = [google_pubsub_topic_iam_binding.binding, google_storage_bucket.bucket]
 }
-
 
 resource "google_cloudfunctions_function" "my_function" {
   name         = "spark_etl"
