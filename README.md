@@ -61,7 +61,8 @@ Here is an example of a vizualisation for the daily aggregation:
 
 ![map](images/daily_agg_map_example.png)
 
-You can then destroy your cloud architecture with terraform by providing the same information when you created it.
+### Uninstallation
+You have to destroy your cloud architecture with terraform to avoid unecessary billings. You'll have to provide the same informations that you entered when you created it.
 ```sh
 terraform destroy
 ```
