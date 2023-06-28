@@ -86,7 +86,7 @@ resource "google_dataproc_autoscaling_policy" "asp" {
   location  = "europe-west9"
 
   worker_config {
-    max_instances = 4
+    max_instances = 6
   }
 
   basic_algorithm {
