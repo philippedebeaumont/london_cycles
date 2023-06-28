@@ -73,8 +73,30 @@ resource "google_dataproc_cluster" "multinode_spark_cluster" {
       }
     }
 
+    autoscaling_config {
+      policy_uri = google_dataproc_autoscaling_policy.asp.name
+    }
+
   }
   depends_on = [google_storage_bucket.bucket]
+}
+
+resource "google_dataproc_autoscaling_policy" "asp" {
+  policy_id = "dataproc-policy"
+  location  = "europe-west9"
+
+  worker_config {
+    max_instances = 4
+  }
+
+  basic_algorithm {
+    yarn_config {
+      graceful_decommission_timeout = "30s"
+
+      scale_up_factor   = 0.5
+      scale_down_factor = 0.5
+    }
+  }
 }
 
 resource "google_bigquery_dataset" "stg_dataset" {
