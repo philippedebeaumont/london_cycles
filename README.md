@@ -19,9 +19,11 @@ The data come from the [**Transport for London API**](https://tfl.gov.uk/info-fo
 ### Prerequisites
 1. Install [**Python**](https://www.python.org/downloads/source/)
 
-2. Install the [**Google Cloud CLI**](https://cloud.google.com/sdk/docs/install-sdk)
+2. Install the [**Google Cloud CLI**](https://cloud.google.com/sdk/docs/install-sdk) and log with your google cloud account, select the google cloud project that you'll use to test it.
 
 3. Install [**Terraform**](https://developer.hashicorp.com/terraform/downloads)
+
+4. Create a google cloud project. Export your service account credentials keys. Enable Dataproc API, Pub/Sub API and Cloud function API.
 
 ### Installation
 
