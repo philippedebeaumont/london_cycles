@@ -16,7 +16,7 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "bucket" {
-    name = "${var.bucket}_${var.project}"
+    name = "${var.bucket}-${var.project}"
     location = var.region
     force_destroy = true
 
@@ -38,7 +38,7 @@ resource "google_dataproc_cluster" "multinode_spark_cluster" {
 
   cluster_config {
 
-    staging_bucket = "${var.bucket}_${var.project}"
+    staging_bucket = google_storage_bucket.bucket.name
 
     gce_cluster_config {
       network = var.network
@@ -76,8 +76,8 @@ resource "google_dataproc_cluster" "multinode_spark_cluster" {
     autoscaling_config {
       policy_uri = google_dataproc_autoscaling_policy.asp.name
     }
-
   }
+
   depends_on = [google_storage_bucket.bucket]
 }
 
@@ -120,7 +120,7 @@ resource "google_pubsub_topic" "topic" {
 }
 
 resource "google_storage_notification" "notification" {
-  bucket = "${var.bucket}_${var.project}"
+  bucket = google_storage_bucket.bucket.name
   payload_format = "JSON_API_V1"
 
   topic = google_pubsub_topic.topic.id
@@ -151,7 +151,7 @@ resource "google_cloudfunctions_function" "my_function" {
 
   environment_variables = {
     "PROJECT" = var.project
-    "BUCKET"  = "${var.bucket}_${var.project}"
+    "BUCKET"  = google_storage_bucket.bucket.name
     "REGION"  = var.region
     "DAG_PATH"= local.gcs_path_to_dag
     "DATASET" = var.dataset
