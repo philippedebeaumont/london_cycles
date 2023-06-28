@@ -33,7 +33,7 @@ def df_preparation_to_bq(df):
 def load_to_bq(df, project_id, dest_table):
     df.write.format("bigquery") \
         .option("table", project_id + "." + dest_table) \
-        .mode("overwrite") \
+        .mode("append") \
         .save()
 
 def get_daily_agg(df):
