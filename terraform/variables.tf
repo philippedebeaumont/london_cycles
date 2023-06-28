@@ -52,4 +52,6 @@ locals {
   gcs_path_to_zip = "zip/cloud_function.zip"
   local_path_to_zip = "../cloud_function/cloud_function.zip"
   dag_entry_point = "spark_submit"
+  table_hires = "cycle_hires"
+  table_daily_agg = "daily_agg"
 }
