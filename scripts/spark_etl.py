@@ -26,7 +26,7 @@ def df_preparation_to_bq(df):
         .withColumnRenamed("EndStation Id", "end_station_id").withColumnRenamed("EndStation Name", "end_station_name") \
         .withColumnRenamed("Start Date", "start_date").withColumnRenamed("StartStation Id", "start_station_id") \
         .withColumnRenamed("StartStation Name", "start_station_name")
-    df.select("rental_id", "duration", "bike_id", "start_date", "start_station_id", "start_station_name", "start_location",
+    df = df.select("rental_id", "duration", "bike_id", "start_date", "start_station_id", "start_station_name", "start_location",
                 "end_date", "end_station_id", "end_station_name", "end_location")
     return df
 
@@ -40,7 +40,7 @@ def get_daily_agg(df):
     df = df.withColumn("start_date", to_date(col("start_date")))
     df = df.withColumn("end_date", to_date(col("end_date")))
     df = df.groupBy("start_date", "start_station_id").agg(
-        max("start_station_name").alias("station_name_start"),
+        max("start_station_name").alias("start_station_name"),
         max("start_location").alias("start_location"),
         sum("duration").alias("total_duration"),
         count("rental_id").alias("hire_count")
@@ -54,9 +54,9 @@ def run():
         dest='bucket',
         help='Bucket on cloud storage.')
     parser.add_argument(
-        '--input_folder',
-        dest='input_folder',
-        help='Input folder with csv files to process.')
+        '--input_file',
+        dest='input_file',
+        help='Input csv file to process.')
     parser.add_argument(
         '--station_data',
         dest='station_data',
@@ -76,7 +76,6 @@ def run():
     
     args = parser.parse_args()
 
-
     spark = SparkSession.builder.appName("Spark Dataframes")\
         .config("spark.driver.extraJavaOptions", "-Dorg.slf4j.simpleLogger.defaultLogLevel=WARN") \
         .config("spark.executor.extraJavaOptions", "-Dorg.slf4j.simpleLogger.defaultLogLevel=WARN") \
@@ -85,7 +84,7 @@ def run():
     spark.conf.set('temporaryGcsBucket', args.bucket)
 
     df_station = spark.read.option("header", True).csv(args.station_data).select("id", "latitude", "longitude")
-    df = spark.read.option("header", True).csv(args.input_folder)
+    df = spark.read.option("header", True).csv(args.input_file)
     df = df.withColumn("Duration", df["Duration"].cast(IntegerType()))
     df = get_station_location(df, df_station, "start")
     df = get_station_location(df, df_station, "end")
