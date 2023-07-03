@@ -18,8 +18,9 @@ def spark_submit(event, context):
         'pyspark_job': {
             'main_python_file_uri': f'gs://{bucket}/{dag}',
             'jar_file_uris': ['gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar'],
-            'args': ['--bucket', bucket, '--input_file', f'gs://{bucket}/{file}','--station_data', f'gs://{bucket}/london_cycle_stations.csv', 
-                     '--project', project_id, '--table_hires', f'{dataset}.cycle_hires', '--table_daily_agg', f'{dataset}.daily_agg']
+            'args': ['--bucket', bucket, '--input_file', f'gs://{bucket}/{file}','--station_data', f'gs://{bucket}/london_cycle_stations.csv',
+                     '--weather_data', f'gs://{bucket}/2019-2022_london_weather.csv', '--project', project_id, 
+                     '--table_hires', f'{dataset}.cycle_hires', '--table_daily_agg', f'{dataset}.daily_agg']
         }
     }
     job_client.submit_job(request={"project_id": project_id, "region": region, "job": job})

@@ -45,6 +45,11 @@ You have to first upload data for the london cycle stations to get the geographi
 gsutil cp gs://london-bikes/london_cycle_stations.csv gs://datalake-YOUR_PROJECT_ID/london_cycle_stations.csv
 ```
 
+You'll have to upload the weather data.
+```sh
+gsutil cp gs://london-bikes/2019-2022_london_weather.csv gs://datalake-YOUR_PROJECT_ID/2019-2022_london_weather.csv
+```
+
 Then you can upload a file in the hires/ folder to trigger the pipeline.
 ```sh
 gsutil cp gs://london-bikes/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv gs://datalake-YOUR_PROJECT_ID/hires/298JourneyDataExtract29Dec2021-04Jan2022.csv

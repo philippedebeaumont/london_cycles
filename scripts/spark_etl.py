@@ -1,7 +1,7 @@
 import argparse
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import concat, col, lit, to_timestamp, to_date, sum, count, max
-from pyspark.sql.types import IntegerType
+from pyspark.sql.types import IntegerType, FloatType
 
 def get_station_location(df, df_station, start_or_end):
     if start_or_end == "start":
@@ -47,6 +47,16 @@ def get_daily_agg(df):
     )
     return df
 
+def get_datetime_weather(df):
+    df = df.withColumn("date", to_timestamp(df["date"], "yyyy-MM-dd"))
+    df = df.withColumn("date", to_date(col("date")))
+    return df
+
+def get_weather_data(df, df_weather):
+    df = df.join(df_weather, [df["start_date"] == df_weather["date"]])
+    df = df.drop("date")
+    return df
+
 def run():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -61,6 +71,10 @@ def run():
         '--station_data',
         dest='station_data',
         help='Station data to process.')
+    parser.add_argument(
+        '--weather_data',
+        dest='weather_data',
+        help='Weather data to process.')
     parser.add_argument(
         '--project',
         dest='project',
@@ -84,6 +98,9 @@ def run():
     spark.conf.set('temporaryGcsBucket', args.bucket)
 
     df_station = spark.read.option("header", True).csv(args.station_data).select("id", "latitude", "longitude")
+    df_weather = spark.read.option("header", True).csv(args.weather_data)
+    df_weather = df_weather.withColumn("prcp", df_weather["prcp"].cast(FloatType()))
+    df_weather = df_weather.withColumn("tavg", df_weather["tavg"].cast(FloatType()))
     df = spark.read.option("header", True).csv(args.input_file)
     df = df.withColumn("Duration", df["Duration"].cast(IntegerType()))
     df = get_station_location(df, df_station, "start")
@@ -95,6 +112,9 @@ def run():
     load_to_bq(df, args.project, args.table_hires)
 
     df_daily_agg = get_daily_agg(df)
+
+    df_weather = get_datetime_weather(df_weather)
+    df_daily_agg = get_weather_data(df_daily_agg, df_weather)
 
     load_to_bq(df_daily_agg, args.project, args.table_daily_agg)
   
