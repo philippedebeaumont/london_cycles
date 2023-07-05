@@ -1,4 +1,5 @@
 import argparse
+import logging
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import concat, col, lit, to_timestamp, to_date, sum, count, max
 from pyspark.sql.types import IntegerType, FloatType
@@ -97,6 +98,9 @@ def run():
     spark.sparkContext.setLogLevel("WARN")
     spark.conf.set('temporaryGcsBucket', args.bucket)
 
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logging.info(f'Beginning treatment of file {args.input_file}')
+
     df_station = spark.read.option("header", True).csv(args.station_data).select("id", "latitude", "longitude")
     df_weather = spark.read.option("header", True).csv(args.weather_data)
     df_weather = df_weather.withColumn("prcp", df_weather["prcp"].cast(FloatType()))
@@ -117,6 +121,7 @@ def run():
     df_daily_agg = get_weather_data(df_daily_agg, df_weather)
 
     load_to_bq(df_daily_agg, args.project, args.table_daily_agg)
+    logging.info(f'Ended treatment of file {args.input_file}')
   
     spark.stop()
 
