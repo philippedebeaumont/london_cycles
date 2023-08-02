@@ -29,8 +29,8 @@ The data come from the [**Transport for London API**](https://tfl.gov.uk/info-fo
 
 Clone the project:
 ```sh
-git clone https://github.com/philippedebeaumont/spark_etl_on_gcp.git
-cd spark_etl_on_gcp
+git clone https://github.com/philippedebeaumont/spark-etl-on-gcp.git
+cd spark-etl-on-gcp
 ```
 
 Launch the cloud infrastructure with terraform. You'll have to provide the path to the google cloud credentials for your project and the google cloud project id.
